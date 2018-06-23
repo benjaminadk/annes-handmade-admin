@@ -13,6 +13,7 @@ import NoteIcon from '@material-ui/icons/Note'
 import InventoryDialog from '../components/Inventory.Dialog'
 import ReactTable from 'react-table'
 import LightBox from 'react-images'
+import { beads } from '../utils/beads'
 import 'react-table/react-table.css'
 
 const styles = theme => ({
@@ -40,7 +41,6 @@ const styles = theme => ({
 })
 
 class Inventory extends Component {
-  
   state = {
     detailsMode: false,
     open: false,
@@ -49,40 +49,42 @@ class Inventory extends Component {
     images: [],
     imageIndex: 0
   }
-  
-  deleteProduct = async (props) => {
+
+  deleteProduct = async props => {
     const proceed = window.confirm(`Delete Product - ${props.original.title} ?`)
-    if(!proceed) return
+    if (!proceed) return
     const images = []
     props.original.images.forEach(i => {
       let obj = Object.assign({}, { Key: i.slice(39) })
       images.push(obj)
     })
     await this.props.deleteProduct({
-      variables: { productId: props.value, images  },
+      variables: { productId: props.value, images },
       refetchQueries: [{ query: GET_ALL_PRODUCTS_QUERY }]
     })
   }
-  
-  editProduct = async (productId) => {
-    const product = this.props.data.getAllProducts.filter(p => p.id === productId)
+
+  editProduct = async productId => {
+    const product = this.props.data.getAllProducts.filter(
+      p => p.id === productId
+    )
     await this.setState({ open: true, product })
   }
-  
+
   closeDialog = () => this.setState({ open: false })
-  
+
   toggleExpander = bool => this.setState({ detailsMode: bool })
-  
+
   getOutOfStock = products => {
     var out = 0
     products.forEach(p => {
-      if(p.stock === 0) {
+      if (p.stock === 0) {
         out += 1
       }
     })
     return out
   }
-  
+
   openLightbox = arr => {
     const images = []
     arr.forEach(a => {
@@ -91,151 +93,199 @@ class Inventory extends Component {
     })
     this.setState({ images, isOpen: true })
   }
-  
+
   closeLightbox = () => this.setState({ isOpen: false, images: [] })
-  
+
   gotoNext = () => {
     this.setState({ imageIndex: this.state.imageIndex + 1 })
   }
-  
+
   gotoPrevious = () => {
     this.setState({ imageIndex: this.state.imageIndex - 1 })
   }
-  
+
   render() {
-    const { data: { loading, getAllProducts }, classes } = this.props
-    if(loading) return null
+    const {
+      data: { loading, getAllProducts },
+      classes
+    } = this.props
+    if (loading) return null
     const columns = [
-      { Header: () => (<div className={classes.header}>Stock</div>), 
+      {
+        Header: () => <div className={classes.header}>Stock</div>,
         accessor: 'stock',
         width: 75,
-        Cell: props => (<Typography variant='body2'>{props.value}</Typography>)
+        Cell: props => <Typography variant="body2">{props.value}</Typography>
       },
-      { Header: () => (<div className={classes.header}>Name</div>),
+      {
+        Header: () => <div className={classes.header}>Name</div>,
         accessor: 'title',
-        Cell: props => (<Typography variant='body2'>{props.value}</Typography>)
+        Cell: props => <Typography variant="body2">{props.value}</Typography>
       },
-      { Header: () => (<div className={classes.header}>Bead</div>),
+      {
+        Header: () => <div className={classes.header}>Bead</div>,
         accessor: 'bead',
         width: 150,
-        Cell: props => (<Typography variant='body2'>
-                          { props.value === 1 ? 'Green' : props.value === 2 ? 'Red' : props.value === 3 ? 'Black' : 'Other' }
-                        </Typography>)
+        Cell: props => (
+          <Typography variant="body2">{beads[props.value - 1]}</Typography>
+        )
       },
-      { Header: () => (<div className={classes.header}>Type</div>),
+      {
+        Header: () => <div className={classes.header}>Type</div>,
         accessor: 'variant',
         width: 100,
-        Cell: props => (<Typography variant='body2'>
-                          { props.value === 1 ? 'Necklace' : props.value === 2 ? 'Bracelet' : props.value === 3 ? 'Earings' : 'Unknown' }
-                        </Typography>)
+        Cell: props => (
+          <Typography variant="body2">
+            {props.value === 1
+              ? 'Necklace'
+              : props.value === 2
+                ? 'Bracelet'
+                : props.value === 3
+                  ? 'Earrings'
+                  : 'Unknown'}
+          </Typography>
+        )
       },
-      { Header: () => (<div className={classes.header}>Details</div>),
+      {
+        Header: () => <div className={classes.header}>Details</div>,
         expander: true,
         width: 75,
         Expander: ({ isExpanded, ...rest }) => (
-          <Tooltip title='Click to view description'>
-            <div onMouseEnter={() => this.toggleExpander(true)}>{ (isExpanded && this.state.detailsMode) ? <CloseIcon/> : <NoteIcon/> }</div>
-          </Tooltip>),
+          <Tooltip title="Click to view description">
+            <div onMouseEnter={() => this.toggleExpander(true)}>
+              {isExpanded && this.state.detailsMode ? (
+                <CloseIcon />
+              ) : (
+                <NoteIcon />
+              )}
+            </div>
+          </Tooltip>
+        ),
         style: {
           cursor: 'pointer',
           display: 'flex',
           justifyContent: 'center'
         }
       },
-      { Header: () => (<div className={classes.header}>Price</div>),
+      {
+        Header: () => <div className={classes.header}>Price</div>,
         accessor: 'price',
         width: 75,
-        Cell: props => (<Typography variant='body2'>$ {props.value}</Typography>)
+        Cell: props => <Typography variant="body2">$ {props.value}</Typography>
       },
-      { Header: () => (<div className={classes.header}>Images</div>),
+      {
+        Header: () => <div className={classes.header}>Images</div>,
         expander: true,
         width: 75,
         Expander: ({ isExpanded, ...rest }) => (
-          <Tooltip title='Click to view images'>
-            <div onMouseEnter={() => this.toggleExpander(false)}>{ (isExpanded && !this.state.detailsMode) ? <CloseIcon/> : <PhotoIcon/> }</div>
-          </Tooltip>),        
+          <Tooltip title="Click to view images">
+            <div onMouseEnter={() => this.toggleExpander(false)}>
+              {isExpanded && !this.state.detailsMode ? (
+                <CloseIcon />
+              ) : (
+                <PhotoIcon />
+              )}
+            </div>
+          </Tooltip>
+        ),
         style: {
           cursor: 'pointer',
           display: 'flex',
           justifyContent: 'center'
         }
       },
-      { Header: () => (<div className={classes.header}>Edit</div>),
+      {
+        Header: () => <div className={classes.header}>Edit</div>,
         accessor: 'id',
         width: 75,
-        Cell: props => (<div>
-                          <Button
-                            variant='raised'
-                            color='primary'
-                            size='small'
-                            onClick={() => this.editProduct(props.value)}
-                          >Edit</Button>
-                        </div>)
+        Cell: props => (
+          <div>
+            <Button
+              variant="raised"
+              color="primary"
+              size="small"
+              onClick={() => this.editProduct(props.value)}
+            >
+              Edit
+            </Button>
+          </div>
+        )
       },
-      { Header: () => (<div className={classes.header}>Delete</div>),
+      {
+        Header: () => <div className={classes.header}>Delete</div>,
         accessor: 'id',
         width: 75,
-        Cell: props => (<div>
-                          <Button
-                            variant='raised'
-                            size='small'
-                            style={{ backgroundColor: '#ff3232', color: 'white' }}
-                            onClick={() => this.deleteProduct(props)}
-                          >Delete</Button>
-                        </div>)
+        Cell: props => (
+          <div>
+            <Button
+              variant="raised"
+              size="small"
+              style={{ backgroundColor: '#ff3232', color: 'white' }}
+              onClick={() => this.deleteProduct(props)}
+            >
+              Delete
+            </Button>
+          </div>
+        )
       }
-      ]
-    return([
-      <div key='main'>
-        <Typography variant='display2' align='center'>Inventory</Typography>
-        <Typography variant='title' align='center'>Out of Stock Products: {this.getOutOfStock(getAllProducts)}</Typography>
-        <br/>
+    ]
+    return [
+      <div key="main">
+        <Typography variant="display2" align="center">
+          Inventory
+        </Typography>
+        <Typography variant="title" align="center">
+          Out of Stock Products: {this.getOutOfStock(getAllProducts)}
+        </Typography>
+        <br />
         <ReactTable
           data={getAllProducts}
           columns={columns}
           getTrProps={(state, rowInfo, column) => {
             return {
               style: {
-                background: (rowInfo && rowInfo.row.stock === 0) && '#ffb5b5'
+                background: rowInfo && rowInfo.row.stock === 0 && '#ffb5b5'
               }
             }
           }}
           SubComponent={row => {
-            if(this.state.detailsMode) {
-              return(
+            if (this.state.detailsMode) {
+              return (
                 <div>
                   <Paper elevation={4} className={classes.description}>
-                    <Typography variant='title'>Description</Typography>
-                    <Typography variant='body1'>{row.original.description}</Typography>
+                    <Typography variant="title">Description</Typography>
+                    <Typography variant="body1">
+                      {row.original.description}
+                    </Typography>
                   </Paper>
                 </div>
               )
             } else {
-              return(
+              return (
                 <div className={classes.imageContainer}>
                   {row.original.images.map((im, i, a) => (
-                    <img 
-                      key={i} 
-                      alt='prod' 
+                    <img
+                      key={i}
+                      alt="prod"
                       src={im}
                       onClick={() => this.openLightbox(a)}
                       className={classes.image}
                     />
                   ))}
                 </div>
-            )
+              )
             }
           }}
         />
       </div>,
       <InventoryDialog
-        key='dialog'
+        key="dialog"
         open={this.state.open}
         product={this.state.product}
         onClose={this.closeDialog}
       />,
       <LightBox
-        key='light-box'
+        key="light-box"
         isOpen={this.state.isOpen}
         images={this.state.images}
         currentImage={this.state.imageIndex}
@@ -243,7 +293,7 @@ class Inventory extends Component {
         onClickPrev={this.gotoPrevious}
         onClickNext={this.gotoNext}
       />
-      ])
+    ]
   }
 }
 
@@ -259,4 +309,4 @@ export default compose(
   withStyles(styles),
   graphql(GET_ALL_PRODUCTS_QUERY),
   graphql(DELETE_PRODUCT_MUTATION, { name: 'deleteProduct' })
-  )(Inventory)
+)(Inventory)

@@ -1,7 +1,7 @@
 {
-  "name": "shopping-admin",
+  "name": "annes-handmade-admin",
   "version": "1.0.0",
-  "description": "Admin Application for E-Commerce",
+  "description": "Admin Application for Anne's Handmade online store",
   "main": "server.js",
   "scripts": {
     "server": "nodemon ./server.js",
