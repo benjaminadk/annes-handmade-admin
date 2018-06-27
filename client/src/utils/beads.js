@@ -10,5 +10,7 @@ export const beads = [
   'Amethyst',
   'Rose Quartz',
   'Chalk Turquoise',
-  'Swarovski Crystal'
+  'Swarovski Crystal',
+  'Yellow Jade',
+  'Red Creek Jasper'
 ]

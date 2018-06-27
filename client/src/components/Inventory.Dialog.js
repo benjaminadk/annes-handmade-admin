@@ -98,7 +98,7 @@ class InventoryDialog extends Component {
         bead,
         title,
         description,
-        price,
+        price: `$ ${price.toFixed(2)}`,
         stock,
         images,
         files: []
@@ -116,7 +116,16 @@ class InventoryDialog extends Component {
       stock,
       images
     } = this.state
-    const input = { variant, bead, title, description, price, stock, images }
+    const parsedPrice = parseFloat(price.slice(2))
+    const input = {
+      variant,
+      bead,
+      title,
+      description,
+      price: parsedPrice,
+      stock,
+      images
+    }
     const productId = this.props.product[0].id
     await this.props.updateProduct({
       variables: { productId, input },

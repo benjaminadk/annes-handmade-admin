@@ -85,6 +85,16 @@ class Inventory extends Component {
     return out
   }
 
+  getInStockValue = products => {
+    var total = 0
+    products.forEach(p => {
+      if (p.stock > 0) {
+        total += p.price
+      }
+    })
+    return total.toFixed(2)
+  }
+
   openLightbox = arr => {
     const images = []
     arr.forEach(a => {
@@ -237,10 +247,22 @@ class Inventory extends Component {
         <Typography variant="title" align="center">
           Out of Stock Products: {this.getOutOfStock(getAllProducts)}
         </Typography>
+        <Typography variant="title" align="center">
+          In Stock Total Value: $ {this.getInStockValue(getAllProducts)}
+        </Typography>
+        <Typography variant="title" align="center">
+          Total # of Products: {getAllProducts.length}
+        </Typography>
         <br />
         <ReactTable
           data={getAllProducts}
           columns={columns}
+          defaultSorted={[
+            {
+              id: 'title',
+              asc: true
+            }
+          ]}
           getTrProps={(state, rowInfo, column) => {
             return {
               style: {
