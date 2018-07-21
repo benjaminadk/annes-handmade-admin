@@ -26,7 +26,7 @@ const resolvers = mergeResolvers(
 )
 const schema = makeExecutableSchema({ typeDefs, resolvers })
 
-server.use('*', cors({ origin: 'http://localhost:3000' }))
+server.use('*', cors({ origin: 'http://localhost:5000' }))
 
 //webhook for credit card dispute stripe
 // server.post('/webhook/dispute', bodyParser.raw({ type: '*/*' }), (req, res) => {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import gql from 'graphql-tag'
 import { graphql, compose } from 'react-apollo'
-import { GET_ALL_PRODUCTS_QUERY } from '../queries/getAllProducts'
-import { S3_SIGN_MUTATION } from '../mutations/s3Sign'
+import { GET_ALL_PRODUCTS_QUERY } from '../apollo/queries/getAllProducts'
+import { S3_SIGN_MUTATION } from '../apollo/mutations/s3Sign'
+import { CREATE_PRODUCT_MUTATION } from '../apollo/mutations/createProduct'
 import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
@@ -189,14 +189,6 @@ class Upload extends Component {
     )
   }
 }
-
-const CREATE_PRODUCT_MUTATION = gql`
-  mutation($input: ProductInput!) {
-    createProduct(input: $input) {
-      id
-    }
-  }
-`
 
 export default compose(
   graphql(S3_SIGN_MUTATION, { name: 's3Sign' }),

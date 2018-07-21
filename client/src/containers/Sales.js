@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import gql from 'graphql-tag'
 import { graphql, compose } from 'react-apollo'
+import { GET_ALL_SALES_QUERY } from '../apollo/queries/getAllSales'
+import { TOGGLE_SHIPPED_MUTATION } from '../apollo/mutations/toggleShipped'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
@@ -9,8 +10,8 @@ import PersonIcon from '@material-ui/icons/Person'
 import CloseIcon from '@material-ui/icons/Close'
 import ProductIcon from '@material-ui/icons/ShoppingCart'
 import NoteIcon from '@material-ui/icons/Note'
+import Loading from '../components/Loading'
 import ReactTable from 'react-table'
-import 'react-table/react-table.css'
 import _ from 'lodash'
 import { formatDate } from '../utils/formatDate'
 
@@ -41,20 +42,22 @@ const styles = theme => ({
   },
   prodHeader: {
     fontFamily: 'Roboto, Arial, sans-serif',
-    fontWeight: 'bold',
     color: 'white',
-    backgroundColor: '#3f51b5',
+    backgroundColor: theme.palette.primary.main,
     padding: 2
   },
   custMainHeader: {
     fontFamily: 'Roboto, Arial, sans-serif',
-    fontWeight: 'bold',
     color: 'white',
-    backgroundColor: '#3f51b5',
+    backgroundColor: theme.palette.primary.main,
     padding: 2
   },
   custSubHeader: {
     fontFamily: 'Roboto, Arial, sans-serif'
+  },
+  stripeButton: {
+    display: 'flex',
+    justifyContent: 'center'
   }
 })
 
@@ -87,12 +90,23 @@ class Sales extends Component {
       data: { loading, getAllSales },
       classes
     } = this.props
-    if (loading) return null
+    if (loading) return <Loading />
     const columns = [
       {
         Header: () => <div className={classes.header}>Order Date</div>,
         accessor: 'createdOn',
         width: 100,
+        sortMethod: (a, b, desc) => {
+          const dateA = new Date(a).getTime()
+          const dateB = new Date(b).getTime()
+          if (dateA > dateB) {
+            return 1
+          }
+          if (dateA < dateB) {
+            return -1
+          }
+          return 0
+        },
         Cell: props => (
           <Typography variant="body2">{formatDate(props.value)}</Typography>
         )
@@ -134,11 +148,7 @@ class Sales extends Component {
             )}
           </div>
         ),
-        style: {
-          cursor: 'pointer',
-          display: 'flex',
-          justifyContent: 'center'
-        }
+        style: { cursor: 'pointer', display: 'flex', justifyContent: 'center' }
       },
       {
         Header: () => <div className={classes.header}>Pieces</div>,
@@ -169,11 +179,7 @@ class Sales extends Component {
             )}
           </div>
         ),
-        style: {
-          cursor: 'pointer',
-          display: 'flex',
-          justifyContent: 'center'
-        }
+        style: { cursor: 'pointer', display: 'flex', justifyContent: 'center' }
       },
       {
         Header: () => <div className={classes.header}>Total</div>,
@@ -196,6 +202,25 @@ class Sales extends Component {
               .toFixed(2)}`}
           </Typography>
         )
+      },
+      {
+        Header: () => <div className={classes.header}>Stripe</div>,
+        accessor: 'stripeId',
+        width: 100,
+        Cell: props => (
+          <div className={classes.stripeButton}>
+            <Button
+              variant="raised"
+              color="primary"
+              size="small"
+              href={`https://dashboard.stripe.com/payments/${props.value}`}
+              target="_blank"
+              onClick={() => console.log(props)}
+            >
+              Stripe
+            </Button>
+          </div>
+        )
       }
     ]
     const columns2 = [
@@ -206,21 +231,28 @@ class Sales extends Component {
             Header: () => <div className={classes.custSubHeader}>First</div>,
             accessor: 'firstName',
             Cell: props => (
-              <Typography variant="body2">{props.value}</Typography>
+              <Typography variant="body2" align="center">
+                {props.value}
+              </Typography>
             )
           },
           {
             Header: () => <div className={classes.custSubHeader}>Last</div>,
             accessor: 'lastName',
             Cell: props => (
-              <Typography variant="body2">{props.value}</Typography>
+              <Typography variant="body2" align="center">
+                {props.value}
+              </Typography>
             )
           },
           {
             Header: () => <div className={classes.custSubHeader}>Email</div>,
             accessor: 'email',
+            width: 175,
             Cell: props => (
-              <Typography variant="body2">{props.value}</Typography>
+              <Typography variant="body2" align="center">
+                {props.value}
+              </Typography>
             )
           }
         ]
@@ -231,36 +263,50 @@ class Sales extends Component {
           {
             Header: () => <div className={classes.custSubHeader}>Street</div>,
             accessor: 'street1',
+            width: 200,
             Cell: props => (
-              <Typography variant="body2">{props.value}</Typography>
+              <Typography variant="body2" align="center">
+                {props.value}
+              </Typography>
             )
           },
           {
             Header: () => <div className={classes.custSubHeader}>Apt</div>,
             accessor: 'street2',
+            width: 50,
             Cell: props => (
-              <Typography variant="body2">{props.value}</Typography>
+              <Typography variant="body2" align="center">
+                {props.value}
+              </Typography>
             )
           },
           {
             Header: () => <div className={classes.custSubHeader}>City</div>,
             accessor: 'city',
             Cell: props => (
-              <Typography variant="body2">{props.value}</Typography>
+              <Typography variant="body2" align="center">
+                {props.value}
+              </Typography>
             )
           },
           {
             Header: () => <div className={classes.custSubHeader}>State</div>,
             accessor: 'state',
+            width: 75,
             Cell: props => (
-              <Typography variant="body2">{props.value}</Typography>
+              <Typography variant="body2" align="center">
+                {props.value}
+              </Typography>
             )
           },
           {
             Header: () => <div className={classes.custSubHeader}>Zip</div>,
             accessor: 'zip',
+            width: 65,
             Cell: props => (
-              <Typography variant="body2">{props.value}</Typography>
+              <Typography variant="body2" align="center">
+                {props.value}
+              </Typography>
             )
           },
           {
@@ -349,6 +395,7 @@ class Sales extends Component {
           data={getAllSales}
           columns={columns}
           defaultSorted={[{ id: 'createdOn', desc: true }]}
+          className="-striped -highlight"
           SubComponent={row => {
             if (this.state.customerMode) {
               return (
@@ -358,6 +405,7 @@ class Sales extends Component {
                     columns={columns2}
                     showPagination={false}
                     defaultPageSize={1}
+                    style={{ marginTop: '5vh', marginBottom: '5vh' }}
                     SubComponent={row => {
                       return (
                         <div>
@@ -406,47 +454,6 @@ class Sales extends Component {
     )
   }
 }
-
-const GET_ALL_SALES_QUERY = gql`
-  query {
-    getAllSales {
-      id
-      products {
-        variant
-        title
-        description
-        images
-        price
-        stock
-        createdOn
-      }
-      quantity
-      total
-      shippingAddress {
-        title
-        email
-        firstName
-        lastName
-        street1
-        street2
-        city
-        state
-        zip
-        notes
-      }
-      shipped
-      createdOn
-    }
-  }
-`
-
-const TOGGLE_SHIPPED_MUTATION = gql`
-  mutation($saleId: ID!, $status: Boolean!) {
-    toggleShipped(saleId: $saleId, status: $status) {
-      success
-    }
-  }
-`
 
 export default compose(
   withStyles(styles),

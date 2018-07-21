@@ -10,6 +10,8 @@ const saleSchema = new mongoose.Schema({
 
   total: Number,
 
+  stripeId: String,
+
   shippingAddress: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'shipping'

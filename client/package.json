@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^1.0.0",
-    "@material-ui/icons": "^1.0.0",
+    "@material-ui/core": "^1.4.0",
+    "@material-ui/icons": "^1.1.0",
     "apollo-cache-inmemory": "^1.1.11",
     "apollo-client": "^2.2.7",
     "apollo-link": "^1.2.1",
@@ -12,6 +12,7 @@
     "axios": "^0.18.0",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.8.0",
+    "match-sorter": "^2.2.3",
     "react": "^16.4.0",
     "react-apollo": "^2.0.4",
     "react-dom": "^16.4.0",
@@ -21,11 +22,12 @@
     "react-scripts": "1.1.1",
     "react-table": "^6.8.6",
     "react-text-mask": "^5.2.0",
+    "react-vis": "^1.10.4",
     "text-mask-addons": "^3.7.2",
     "typeface-roboto": "0.0.54"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=5000 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

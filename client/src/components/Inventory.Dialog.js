@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import gql from 'graphql-tag'
 import { graphql, compose } from 'react-apollo'
-import { GET_ALL_PRODUCTS_QUERY } from '../queries/getAllProducts'
-import { S3_SIGN_MUTATION } from '../mutations/s3Sign'
+import { GET_ALL_PRODUCTS_QUERY } from '../apollo/queries/getAllProducts'
+import { S3_SIGN_MUTATION } from '../apollo/mutations/s3Sign'
+import { UPDATE_PRODUCT_MUTATION } from '../apollo/mutations/updateProduct'
+import { DELETE_IMAGE_MUTATION } from '../apollo/mutations/deleteImage'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -312,22 +313,6 @@ class InventoryDialog extends Component {
     }
   }
 }
-
-const UPDATE_PRODUCT_MUTATION = gql`
-  mutation($productId: ID!, $input: ProductInput!) {
-    updateProduct(productId: $productId, input: $input) {
-      success
-    }
-  }
-`
-
-const DELETE_IMAGE_MUTATION = gql`
-  mutation($productId: ID!, $image: String!) {
-    deleteImage(productId: $productId, image: $image) {
-      success
-    }
-  }
-`
 
 export default compose(
   withStyles(styles),
