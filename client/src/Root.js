@@ -3,11 +3,13 @@ import { withStyles } from '@material-ui/core/styles'
 import { graphql, compose } from 'react-apollo'
 import { ADMIN_LOGIN } from './apollo/mutations/adminLogin'
 import { Switch, Route } from 'react-router-dom'
+import { PrivateRoute, Admin } from './utils/routing'
 import Drawer from '@material-ui/core/Drawer'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import LoginDialog from './components/Root.LoginDialog'
+import Home from './containers/Home'
 import Upload from './containers/Upload'
 import Sales from './containers/Sales'
 import Inventory from './containers/Inventory'
@@ -88,6 +90,7 @@ class Root extends Component {
         localStorage.setItem('USERNAME', username)
         localStorage.setItem('PASSWORD', password)
       }
+      Admin.enterAdminMode()
       await this.setState({ open: false })
     }
   }
@@ -105,24 +108,19 @@ class Root extends Component {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: classes.drawerPaper
-          }}
-        >
+        <Drawer variant="permanent" classes={{ paper: classes.drawerPaper }}>
           <div className={classes.toolbar} />
           <RootMenu />
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route exact path="/" render={() => <h1>Home</h1>} />
-            <Route path="/upload" component={Upload} />
-            <Route path="/sales" component={Sales} />
-            <Route path="/inventory" component={Inventory} />
-            <Route path="/users" component={Users} />
-            <Route path="/charts" component={Charts} />
+            <Route exact path="/" component={Home} />
+            <PrivateRoute path="/upload" component={Upload} />
+            <PrivateRoute path="/sales" component={Sales} />
+            <PrivateRoute path="/inventory" component={Inventory} />
+            <PrivateRoute path="/users" component={Users} />
+            <PrivateRoute path="/charts" component={Charts} />
           </Switch>
         </main>
       </div>,

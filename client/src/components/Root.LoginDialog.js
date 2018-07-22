@@ -12,7 +12,7 @@ import Checkbox from '@material-ui/core/Checkbox'
 
 const styles = theme => ({
   dialogRoot: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    backgroundColor: 'rgba(0, 0, 0, 0.75)'
   },
   dialogPaper: {
     width: '30vw'

@@ -10,26 +10,27 @@ import {
   Crosshair
 } from 'react-vis'
 import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 import moment from 'moment'
+
+const buttons = ['Q1', 'Q2', 'Q3', 'Q4', 'Full Year', '1st Half', '2nd Half']
 
 const styles = theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  button: {
+    marginRight: '1vw'
   }
 })
 
 class SalesByDate extends Component {
-  state = {
-    crosshairValues: []
-  }
-
-  handleMouseOver = (datapoint, event) =>
-    this.setState({ crosshairValues: [datapoint] })
-
-  handleMouseOut = () => this.setState({ crosshairValues: [] })
-
   formatCrosshairTitle = values => ({ title: 'Sale', value: '' })
 
   formatCrosshairItems = values => [
@@ -48,16 +49,27 @@ class SalesByDate extends Component {
   }
 
   render() {
-    const { data, classes } = this.props
+    const {
+      handleDomainChange,
+      handleMouseOver,
+      handleMouseOut,
+      data,
+      q0,
+      domain1,
+      domain2,
+      subTitle,
+      crosshairValues,
+      classes
+    } = this.props
     if (!data.length) return null
     return (
       <div className={classes.root}>
-        <Typography variant="display1">Sales By Date</Typography>
+        <Typography variant="display1">Sales By Date - {subTitle}</Typography>
         <XYPlot
           height={400}
-          width={600}
-          margin={{ top: 50, right: 50, bottom: 100, left: 50 }}
-          xDomain={[data[0].x, data[data.length - 1].x]}
+          width={800}
+          margin={{ top: 50, right: 100, bottom: 100, left: 100 }}
+          xDomain={[moment(q0).quarter(domain1), moment(q0).quarter(domain2)]}
           xType="time"
         >
           <VerticalGridLines />
@@ -73,16 +85,17 @@ class SalesByDate extends Component {
           />
           <MarkSeries
             data={data}
-            sizeRange={[5, 25]}
+            sizeRange={[3, 20]}
             stroke="#6a936f"
             strokeWidth={1.5}
             fill="#ae7bc4"
             opacity="0.8"
-            onValueMouseOver={this.handleMouseOver}
-            onValueMouseOut={this.handleMouseOut}
+            onValueMouseOver={handleMouseOver}
+            onValueMouseOut={handleMouseOut}
+            //animation='wobbly'
           />
           <Crosshair
-            values={this.state.crosshairValues}
+            values={crosshairValues}
             itemsFormat={this.formatCrosshairItems}
             titleFormat={this.formatCrosshairTitle}
             style={{
@@ -91,6 +104,20 @@ class SalesByDate extends Component {
             }}
           />
         </XYPlot>
+        <div className={classes.buttonContainer}>
+          {buttons.map((b, i) => (
+            <Button
+              key={b}
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => handleDomainChange(i)}
+              className={classes.button}
+            >
+              {b}
+            </Button>
+          ))}
+        </div>
       </div>
     )
   }
