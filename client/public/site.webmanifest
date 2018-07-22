@@ -1,0 +1,19 @@
+{
+    "name": "Anne's Handmade",
+    "short_name": "Anne's Handmade",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png?v=zXrLn60j9k",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png?v=zXrLn60j9k",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#93cf9a",
+    "background_color": "#93cf9a",
+    "display": "standalone"
+}

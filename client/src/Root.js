@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import gql from 'graphql-tag'
 import { graphql, compose } from 'react-apollo'
+import { ADMIN_LOGIN } from './apollo/mutations/adminLogin'
 import { Switch, Route } from 'react-router-dom'
 import Drawer from '@material-ui/core/Drawer'
 import AppBar from '@material-ui/core/AppBar'
@@ -43,42 +43,65 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
     minWidth: 0
   },
-  toolbar: theme.mixins.toolbar
+  toolbar: theme.mixins.toolbar,
+  top: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  right: {
+    marginRight: '1.5vw'
+  }
 })
 
 class Root extends Component {
   state = {
-    open: false,
+    open: true,
     username: '',
     password: '',
     error: false,
-    message: ''
+    message: '',
+    checked: false
+  }
+
+  componentWillMount() {
+    let username = localStorage.getItem('USERNAME') || ''
+    let password = localStorage.getItem('PASSWORD') || ''
+    this.setState({
+      username,
+      password,
+      checked: Boolean(username && password)
+    })
   }
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value })
 
   attemptLogin = async () => {
-    const { username, password } = this.state
+    const { username, password, checked } = this.state
     const response = await this.props.login({
       variables: { username, password }
     })
-    if (!response.data.login.success) {
-      await this.setState({ error: true, message: response.data.login.message })
-      return
+    const { success, message } = response.data.login
+    if (!success) {
+      await this.setState({ error: true, message })
     } else {
+      if (checked) {
+        localStorage.setItem('USERNAME', username)
+        localStorage.setItem('PASSWORD', password)
+      }
       await this.setState({ open: false })
-      return
     }
   }
+
+  handleCheckbox = (e, checked) => this.setState({ checked })
 
   render() {
     const { classes } = this.props
     return [
       <div key="root-main" className={classes.root}>
         <AppBar position="absolute" className={classes.appBar}>
-          <Toolbar>
+          <Toolbar className={classes.top}>
             <Typography variant="title" color="inherit" noWrap>
-              Anne's Handmade Admin
+              Anne's Admin
             </Typography>
           </Toolbar>
         </AppBar>
@@ -107,28 +130,17 @@ class Root extends Component {
         key="root-dialog"
         attemptLogin={this.attemptLogin}
         handleChange={this.handleChange}
+        handleCheckbox={this.handleCheckbox}
         open={this.state.open}
         username={this.state.username}
         password={this.state.password}
         error={this.state.error}
         message={this.state.message}
+        checked={this.state.checked}
       />
     ]
   }
 }
-
-const ADMIN_LOGIN = gql`
-  mutation($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      success
-      message
-      admin {
-        id
-        username
-      }
-    }
-  }
-`
 
 export default compose(
   withStyles(styles),

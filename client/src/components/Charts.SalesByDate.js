@@ -6,9 +6,11 @@ import {
   YAxis,
   VerticalGridLines,
   HorizontalGridLines,
-  MarkSeries
+  MarkSeries,
+  Crosshair
 } from 'react-vis'
 import Typography from '@material-ui/core/Typography'
+import moment from 'moment'
 
 const styles = theme => ({
   root: {
@@ -19,6 +21,22 @@ const styles = theme => ({
 })
 
 class SalesByDate extends Component {
+  state = {
+    crosshairValues: []
+  }
+
+  handleMouseOver = (datapoint, event) =>
+    this.setState({ crosshairValues: [datapoint] })
+
+  handleMouseOut = () => this.setState({ crosshairValues: [] })
+
+  formatCrosshairTitle = values => ({ title: 'Sale', value: '' })
+
+  formatCrosshairItems = values => [
+    { title: 'date', value: moment(values[0].x).format('MMM DD YYYY') },
+    { title: 'total', value: `$${values[0].y}` }
+  ]
+
   handleTickFormatX = v => {
     let str = v.toString().slice(4, 10)
     if (str[4] === '0') return str.replace('0', '')
@@ -60,6 +78,17 @@ class SalesByDate extends Component {
             strokeWidth={1.5}
             fill="#ae7bc4"
             opacity="0.8"
+            onValueMouseOver={this.handleMouseOver}
+            onValueMouseOut={this.handleMouseOut}
+          />
+          <Crosshair
+            values={this.state.crosshairValues}
+            itemsFormat={this.formatCrosshairItems}
+            titleFormat={this.formatCrosshairTitle}
+            style={{
+              line: { display: 'none' },
+              box: { fontFamily: 'Roboto', backgroundColor: '#6a936f' }
+            }}
           />
         </XYPlot>
       </div>

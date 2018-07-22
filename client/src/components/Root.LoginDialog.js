@@ -1,4 +1,5 @@
 import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
@@ -6,57 +7,97 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Slide from '@material-ui/core/Slide'
+import Typography from '@material-ui/core/Typography'
+import Checkbox from '@material-ui/core/Checkbox'
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
+const styles = theme => ({
+  dialogRoot: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  dialogPaper: {
+    width: '30vw'
+  },
+  dialogTitle: {
+    backgroundColor: theme.palette.primary.main
+  },
+  dialogText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: '2.5vh'
+  },
+  checkBox: {
+    display: 'flex',
+    alignItems: 'center'
+  }
+})
 
-const ERROR_STYLE = {
-  color: 'red',
-  fontWeight: 'bold',
-  backgroundColor: 'pink',
-  textAlign: 'center',
-  padding: '5px',
-  marginTop: '2vh'
-}
-
-export default ({ open, username, password, handleChange, attemptLogin, error, message }) => {
-  return(
-    <Dialog open={open} transition={Transition}>
-      <DialogTitle>Login Shopping Site Admin</DialogTitle>
+const LoginDialog = ({
+  open,
+  username,
+  password,
+  error,
+  message,
+  checked,
+  handleChange,
+  attemptLogin,
+  handleCheckbox,
+  classes
+}) => {
+  return (
+    <Dialog
+      open={open}
+      disableBackdropClick
+      disableEscapeKeyDown
+      maxWidth={false}
+      classes={{ root: classes.dialogRoot, paper: classes.dialogPaper }}
+    >
+      <DialogTitle disableTypography classes={{ root: classes.dialogTitle }}>
+        <Typography variant="headline" align="center" style={{ color: '#FFF' }}>
+          Login
+        </Typography>
+      </DialogTitle>
       <DialogContent>
         <TextField
-          type='text'
-          name='username'
-          label='Username'
+          type="text"
+          name="username"
+          label="Username"
           value={username}
           onChange={handleChange}
           fullWidth
+          style={{ marginTop: '2.5vh' }}
         />
-        <br/>
-        <br/>
+        <br />
+        <br />
         <TextField
-          type='password'
-          name='password'
-          label='Password'
+          type="password"
+          name="password"
+          label="Password"
           value={password}
           onChange={handleChange}
           fullWidth
         />
-        <br/>
-        {error && <DialogContentText style={ERROR_STYLE}>{message}</DialogContentText>}
+        <br />
+        <DialogContentText classes={{ root: classes.dialogText }}>
+          {error && message}
+        </DialogContentText>
+        <div className={classes.checkBox}>
+          <Checkbox checked={checked} onChange={handleCheckbox} />
+          <Typography variant="body2">Remember Me</Typography>
+        </div>
       </DialogContent>
       <DialogActions>
-        <Button 
-          variant='raised'
-          color='primary'
+        <Button
+          variant="raised"
+          color="primary"
           onClick={attemptLogin}
           disabled={!username || !password}
+          fullWidth
         >
           Login
         </Button>
       </DialogActions>
     </Dialog>
-    )
+  )
 }
+
+export default withStyles(styles)(LoginDialog)

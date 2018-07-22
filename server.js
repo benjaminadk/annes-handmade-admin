@@ -1,4 +1,6 @@
 const express = require('express')
+const compression = require('compression')
+const sslRedirect = require('heroku-ssl-redirect')
 const bodyParser = require('body-parser')
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
 const { makeExecutableSchema } = require('graphql-tools')
@@ -9,13 +11,7 @@ const {
 } = require('merge-graphql-schemas')
 const cors = require('cors')
 const path = require('path')
-const { checkAuthHeaders } = require('./middleware/checkAuthHeaders')
 const KEYS = require('./config')
-require('./models/admin')
-require('./models/product')
-require('./models/sale')
-require('./models/shipping')
-require('./models/user')
 require('./models/connect')
 const models = require('./models')
 const server = express()
@@ -26,28 +22,19 @@ const resolvers = mergeResolvers(
 )
 const schema = makeExecutableSchema({ typeDefs, resolvers })
 
-server.use('*', cors({ origin: 'http://localhost:5000' }))
-
-//webhook for credit card dispute stripe
-// server.post('/webhook/dispute', bodyParser.raw({ type: '*/*' }), (req, res) => {
-//   res.send(200)
-//   const data = JSON.parse(req.body)
-//   const SECRET = 'whsec_aQGh4GlirBr4A0jzOUA1R8my2OY8cSGt'
-//   console.log(data)
-// })
-
-server.use(checkAuthHeaders)
+server.use(compression())
+server.use(sslRedirect())
+server.use(cors())
 
 server.use(
   '/graphql',
   bodyParser.json(),
-  graphqlExpress(req => ({
+  graphqlExpress({
     schema,
     context: {
-      models,
-      user: req.user
+      models
     }
-  }))
+  })
 )
 
 server.use(
@@ -56,5 +43,12 @@ server.use(
     endpointURL: '/graphql'
   })
 )
+
+if (process.env.NODE_ENV === 'production') {
+  server.use(express.static('client/build'))
+  server.get('*', (req, res) => {
+    res.sendFile(path.resolve('client', 'build', 'index.html'))
+  })
+}
 
 server.listen(port, () => console.log(`SERVER LISTENING ON PORT: ${port}`))

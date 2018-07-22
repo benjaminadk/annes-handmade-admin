@@ -6,5 +6,5 @@
 - [ ] work on dispute endpoint for webhooks
 - [ ] data visualization
 - [ ] private routing
-- [ ] username password login for admin
+- [x] username password login for admin
 - [ ] publish site

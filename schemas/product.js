@@ -27,14 +27,6 @@ module.exports = `
         imageUrl: String
     }
     
-    type UpdatePayload {
-        success: Boolean
-    }
-    
-    type DeletePayload {
-        success: Boolean
-    }
-    
     input ImageKey {
         Key: String
     }
@@ -47,8 +39,8 @@ module.exports = `
     type Mutation {
         s3Sign(filename: String!, filetype: String!): s3Payload
         createProduct(input: ProductInput!): Product
-        updateProduct(productId: ID!, input: ProductInput!): UpdatePayload
-        deleteProduct(productId: ID!, images: [ImageKey]!): DeletePayload
-        deleteImage(productId: ID!, image: String!): DeletePayload
+        updateProduct(productId: ID!, input: ProductInput!): Payload
+        deleteProduct(productId: ID!, images: [ImageKey]!): Payload
+        deleteImage(productId: ID!, image: String!): Payload
     }
 `

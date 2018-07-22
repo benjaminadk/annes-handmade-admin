@@ -12,6 +12,13 @@ class Charts extends Component {
     salesByDate: []
   }
 
+  componentDidMount() {
+    if (!this.props.data.loading) {
+      const { getAllSales } = this.props.data
+      this.handleSalesByDate(getAllSales)
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.data.loading && !this.props.data.loading) {
       const { getAllSales } = this.props.data

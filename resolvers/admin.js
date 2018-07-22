@@ -1,34 +1,25 @@
-const bcrypt = require('bcrypt-nodejs')
+const keys = require('../config')
 
 module.exports = {
-  Query: {
-    getAdmin: async (root, args, { models }) => {
-      return null
-    }
-  },
-
   Mutation: {
     login: async (root, { username, password }, { models }) => {
-      const admin = await models.Admin.findOne({ username })
-      if (!admin) {
+      const isAdmin = username === keys.ADMIN_USERNAME
+      if (!isAdmin) {
         return {
           success: false,
-          message: 'Invalid Username',
-          admin: null
+          message: 'Invalid Username'
         }
       }
-      const isMatch = await bcrypt.compare(password, admin.password)
+      const isMatch = password === keys.ADMIN_PASSWORD
       if (!isMatch) {
         return {
           success: false,
-          message: 'Invalid Password',
-          admin: null
+          message: 'Invalid Password'
         }
       } else {
         return {
           success: true,
-          message: 'Login Successful',
-          admin
+          message: 'Login Successful'
         }
       }
     }

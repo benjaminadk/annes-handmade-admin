@@ -11,15 +11,11 @@ module.exports = `
         createdOn: String
     }
     
-    type TogglePayload {
-        success: Boolean
-    }
-    
     type Query {
         getAllSales: [Sale]
     }
     
     type Mutation {
-        toggleShipped(saleId: ID!, status: Boolean!): TogglePayload
+        toggleShipped(saleId: ID!, status: Boolean!): Payload
     }
 `
