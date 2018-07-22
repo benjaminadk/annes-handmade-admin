@@ -1,5 +1,5 @@
 module.exports = {
-  PORT: process.env.port,
+  PORT: process.env.PORT,
   MLAB_URI: process.env.MLAB_URI,
   ACCESS_KEY_ID: process.env.ACCESS_KEY_ID,
   SECRET_ACCESS_KEY: process.env.SECRET_ACCESS_KEY,
