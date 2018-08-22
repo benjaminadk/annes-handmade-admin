@@ -4,7 +4,7 @@
 
 - [ ] add a user table to track all signed up users
 - [ ] work on dispute endpoint for webhooks
-- [ ] data visualization
-- [ ] private routing
+- [x] data visualization
+- [x] private routing
 - [x] username password login for admin
-- [ ] publish site
+- [x] publish site
