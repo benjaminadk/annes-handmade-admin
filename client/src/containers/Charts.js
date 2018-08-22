@@ -14,7 +14,8 @@ class Charts extends Component {
     domain1: 1,
     domain2: 5,
     subTitle: '',
-    crosshairValues: []
+    crosshairValues: [],
+    buttonIndex: null
   }
 
   componentDidMount() {
@@ -56,49 +57,56 @@ class Charts extends Component {
           domain1: 1,
           domain2: 2,
           subTitle: `Q1 ${year}`,
-          crosshairValues: []
+          crosshairValues: [],
+          buttonIndex: 0
         })
       case 1:
         return this.setState({
           domain1: 2,
           domain2: 3,
           subTitle: `Q2 ${year}`,
-          crosshairValues: []
+          crosshairValues: [],
+          buttonIndex: 1
         })
       case 2:
         return this.setState({
           domain1: 3,
           domain2: 4,
           subTitle: `Q3 ${year}`,
-          crosshairValues: []
+          crosshairValues: [],
+          buttonIndex: 2
         })
       case 3:
         return this.setState({
           domain1: 4,
           domain2: 5,
           subTitle: `Q4 ${year}`,
-          crosshairValues: []
+          crosshairValues: [],
+          buttonIndex: 3
         })
       case 4:
         return this.setState({
           domain1: 1,
           domain2: 5,
           subTitle: `All ${year}`,
-          crosshairValues: []
+          crosshairValues: [],
+          buttonIndex: 4
         })
       case 5:
         return this.setState({
           domain1: 1,
           domain2: 3,
           subTitle: `1st Half ${year}`,
-          crosshairValues: []
+          crosshairValues: [],
+          buttonIndex: 5
         })
       case 6:
         return this.setState({
           domain1: 3,
           domain2: 5,
           subTitle: `2nd Half ${year}`,
-          crosshairValues: []
+          crosshairValues: [],
+          buttonIndex: 6
         })
       default:
         return
@@ -128,6 +136,7 @@ class Charts extends Component {
           domain2={this.state.domain2}
           subTitle={this.state.subTitle}
           crosshairValues={this.state.crosshairValues}
+          buttonIndex={this.state.buttonIndex}
         />
       </div>
     )

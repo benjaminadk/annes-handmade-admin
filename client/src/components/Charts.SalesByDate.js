@@ -59,6 +59,7 @@ class SalesByDate extends Component {
       domain2,
       subTitle,
       crosshairValues,
+      buttonIndex,
       classes
     } = this.props
     if (!data.length) return null
@@ -92,8 +93,8 @@ class SalesByDate extends Component {
             opacity="0.8"
             onValueMouseOver={handleMouseOver}
             onValueMouseOut={handleMouseOut}
-            //animation='wobbly'
           />
+
           <Crosshair
             values={crosshairValues}
             itemsFormat={this.formatCrosshairItems}
@@ -113,6 +114,9 @@ class SalesByDate extends Component {
               size="small"
               onClick={() => handleDomainChange(i)}
               className={classes.button}
+              style={{
+                border: buttonIndex === i ? '2px solid #ae7bc4' : 'none'
+              }}
             >
               {b}
             </Button>

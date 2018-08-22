@@ -13,7 +13,6 @@ import Home from './containers/Home'
 import Upload from './containers/Upload'
 import Sales from './containers/Sales'
 import Inventory from './containers/Inventory'
-import Users from './containers/Users'
 import Charts from './containers/Charts'
 import RootMenu from './components/Root.Menu'
 import './styles/tables.css'
@@ -119,7 +118,6 @@ class Root extends Component {
             <PrivateRoute path="/upload" component={Upload} />
             <PrivateRoute path="/sales" component={Sales} />
             <PrivateRoute path="/inventory" component={Inventory} />
-            <PrivateRoute path="/users" component={Users} />
             <PrivateRoute path="/charts" component={Charts} />
           </Switch>
         </main>

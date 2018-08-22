@@ -7,7 +7,6 @@ import UploadIcon from '@material-ui/icons/FileUpload'
 import HomeIcon from '@material-ui/icons/Home'
 import MoneyIcon from '@material-ui/icons/MonetizationOn'
 import InventoryIcon from '@material-ui/icons/Pageview'
-import UsersIcon from '@material-ui/icons/Group'
 import ChartIcon from '@material-ui/icons/PieChart'
 import DashIcon from '@material-ui/icons/Dashboard'
 import { Link } from 'react-router-dom'
@@ -17,7 +16,6 @@ const links = [
   { text: 'Upload Product', icon: <UploadIcon />, path: '/upload' },
   { text: 'Sales', icon: <MoneyIcon />, path: '/sales' },
   { text: 'Inventory', icon: <InventoryIcon />, path: '/inventory' },
-  { text: 'Users', icon: <UsersIcon />, path: '/users' },
   { text: 'Charts', icon: <ChartIcon />, path: '/charts' }
 ]
 
