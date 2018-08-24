@@ -186,20 +186,20 @@ class Sales extends Component {
         accessor: 'total',
         width: 150,
         Cell: props => (
-          <Typography variant="body2">{`$ ${props.value}`}</Typography>
+          <Typography variant="body2">{`$ ${props.value.toFixed(
+            2
+          )}`}</Typography>
         ),
         Footer: (
           <Typography variant="body1">
             <span className={classes.totalFooter}>Sales Total: </span>
-            {`$ ${_
-              .reduce(
-                _.map(getAllSales, d => d.total),
-                function(sum, n) {
-                  return sum + n
-                },
-                0
-              )
-              .toFixed(2)}`}
+            {`$ ${_.reduce(
+              _.map(getAllSales, d => d.total),
+              function(sum, n) {
+                return sum + n
+              },
+              0
+            ).toFixed(2)}`}
           </Typography>
         )
       },

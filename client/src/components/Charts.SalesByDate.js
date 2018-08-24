@@ -35,7 +35,7 @@ class SalesByDate extends Component {
 
   formatCrosshairItems = values => [
     { title: 'date', value: moment(values[0].x).format('MMM DD YYYY') },
-    { title: 'total', value: `$${values[0].y}` }
+    { title: 'total', value: `$${values[0].y.toFixed(2)}` }
   ]
 
   handleTickFormatX = v => {
